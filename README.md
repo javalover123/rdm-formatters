@@ -1,2 +1,2 @@
-# redis-desktop-manager-formatter
-Redis desktop manager formatter
+# Redis desktop manager formatters
+Redis desktop manager formatters
