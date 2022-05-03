@@ -34,8 +34,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.javalover123.resp.common.dto.Info;
 import org.javalover123.resp.common.BaseRespFormatter;
+import org.javalover123.resp.common.dto.Info;
 import org.javalover123.resp.common.util.JsonUtil;
 
 /**
@@ -56,6 +56,7 @@ public class TimestampRespFormatter extends BaseRespFormatter {
     @Override
     public String decode(byte[] input) throws IOException {
         String str = new String(input, StandardCharsets.UTF_8);
+        str = str.replace("\"", "");
         final Matcher matcher = PATTERN_TIMESTAMP.matcher(str);
         if (matcher.matches()) {
             final long mills = Long.parseLong(str);
