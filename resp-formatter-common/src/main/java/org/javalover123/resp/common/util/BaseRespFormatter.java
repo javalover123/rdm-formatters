@@ -27,7 +27,9 @@
 
 package org.javalover123.resp.common.util;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -36,6 +38,10 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 import org.javalover123.resp.common.dto.Info;
 
 /**
@@ -50,12 +56,14 @@ public abstract class BaseRespFormatter {
 
     private static final InputStream STDIN = System.in;
 
+    protected Logger log;
+
     public void main(String[] args) {
-        if (args.length == 0) {
+        if (args.length <= typeIndex()) {
             STDOUT.println("usage:BaseFormatter [info|validate|decode]");
             return;
         }
-        switch (args[0]) {
+        switch (args[typeIndex()]) {
             case "info":
                 outputToStdout(this.info());
                 break;
@@ -69,6 +77,10 @@ public abstract class BaseRespFormatter {
                 this.encode();
                 break;
         }
+    }
+
+    protected int typeIndex() {
+        return 0;
     }
 
     /**
@@ -103,7 +115,7 @@ public abstract class BaseRespFormatter {
             map.put("read-only", Boolean.valueOf(true));
             map.put("format", "json");
         } catch (IOException e) {
-            map.put("error", e.getMessage());
+            return error(e.getMessage());
         }
         outputToStdout(map);
         return outputData;
@@ -113,16 +125,23 @@ public abstract class BaseRespFormatter {
         outputToStdout(Collections.singletonMap("error", "not impleted"));
     }
 
+    public String error(String msg) {
+        outputToStdout(Collections.singletonMap("error", msg));
+        return null;
+    }
+
     /**
      * decode byte array
      *
      * @param input byte array
      * @return
      */
-    public abstract String decode(byte[] input);
+    public abstract String decode(byte[] input) throws IOException;
 
     protected void outputToStdout(Object object) {
-        STDOUT.print(jsonify(object));
+        String json = jsonify(object);
+        // log(Level.FINE, "outputToStdout|" + json);
+        STDOUT.print(json);
     }
 
     protected byte[] inputFromStdin() throws IOException {
@@ -133,5 +152,36 @@ public abstract class BaseRespFormatter {
     protected String jsonify(Object object) {
         return JsonUtil.toJson(object);
     }
+
+    protected Logger buildLog() {
+        InputStream inputStream = this.getClass().getResourceAsStream("/logging.properties");
+        try {
+            inputStream = new BufferedInputStream(inputStream);
+            inputStream.mark(0);
+            LogManager manager = LogManager.getLogManager();
+            manager.readConfiguration(inputStream);
+
+            inputStream.reset();
+            final Properties properties = new Properties();
+            properties.load(inputStream);
+            String pattern = properties.getProperty("java.util.logging.FileHandler.pattern", "");
+            int lastIndexOf = pattern.lastIndexOf("/");
+            if (lastIndexOf > 0) {
+                String dir = pattern.substring(0, lastIndexOf);
+                // System.out.println("create log dirs," + dir);
+                new File(dir).mkdirs();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Logger.getLogger(this.getClass().getName());
+    }
+
+    protected void log(Level level, String msg) {
+        if (log != null) {
+            log.log(level, msg);
+        }
+    }
+
 }
 

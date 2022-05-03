@@ -27,7 +27,9 @@
 
 package org.javalover123.resp;
 
-import org.javalover123.resp.timestamp.TimestampRespFormatter;
+import com.esotericsoftware.minlog.Log;
+import com.esotericsoftware.minlog.Log.Logger;
+import org.javalover123.resp.kryo.KryoRespFormatter;
 
 /**
  * 入口
@@ -38,7 +40,23 @@ import org.javalover123.resp.timestamp.TimestampRespFormatter;
 public class App {
 
     public static void main(String[] args) {
-        new TimestampRespFormatter().main(args);
+        if (args == null || args.length < 1) {
+            throw new IllegalArgumentException("please input full class name");
+        }
+        final String className = args[0].trim();
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("class not found, please add class to classpath.\n" + className);
+        }
+        Log.setLogger(new Logger() {
+            @Override
+            protected void print(String message) {
+                
+            }
+        });
+        new KryoRespFormatter(clazz).main(args);
     }
 
 }

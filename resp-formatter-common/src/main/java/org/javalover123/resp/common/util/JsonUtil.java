@@ -48,11 +48,15 @@ public class JsonUtil {
     private static final Gson MAPPER_PRETTY = GsonConfigBase.gson(DEFAULT_DATE_FORMAT, true);
 
     public static String toJson(Object obj) {
-        return toJsonStr(obj, true);
+        return toJsonStr(obj);
     }
 
     public static String toJson(Object obj, boolean pretty) {
         return toJsonStr(obj, pretty);
+    }
+
+    public static String toJsonStr(Object obj) {
+        return toJsonStr(obj, false);
     }
 
     public static String toJsonStr(Object obj, boolean pretty) {

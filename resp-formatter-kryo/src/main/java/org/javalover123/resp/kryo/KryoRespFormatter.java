@@ -25,20 +25,50 @@
  *
  */
 
-package org.javalover123.resp;
+package org.javalover123.resp.kryo;
 
-import org.javalover123.resp.timestamp.TimestampRespFormatter;
+import java.io.IOException;
+import java.util.Arrays;
+import org.javalover123.resp.common.dto.Info;
+import org.javalover123.resp.common.util.BaseRespFormatter;
+import org.javalover123.resp.common.util.JsonUtil;
 
 /**
- * 入口
+ * kryo to json formatter
  *
  * @author javalover123
- * @date 2022/4/27
+ * @date 2022/4/29
  */
-public class App {
+public class KryoRespFormatter extends BaseRespFormatter {
 
-    public static void main(String[] args) {
-        new TimestampRespFormatter().main(args);
+    private KryoSerializer kryoSerializer;
+
+    public KryoRespFormatter(Class clazz) {
+        log = buildLog();
+        this.kryoSerializer = new KryoSerializer(clazz);
+    }
+
+    @Override
+    protected int typeIndex() {
+        return 1;
+    }
+
+    @Override
+    public Info info() {
+        return new Info("0.0.1", "rdm kryo to json formatter");
+    }
+
+    @Override
+    public String decode(byte[] input) throws IOException {
+        try {
+            // log.fine("kryo decode input|" + Arrays.toString(input));
+            final Object result = kryoSerializer.deserialize(input);
+            // log.fine("kryo decode result|" + result);
+            return JsonUtil.toJson(result);
+        } catch (Exception e) {
+            // e.printStackTrace();
+            throw new IOException("kryo decode error|" + Arrays.toString(input), e);
+        }
     }
 
 }

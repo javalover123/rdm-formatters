@@ -27,6 +27,7 @@
 
 package org.javalover123.resp.timestamp;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -53,7 +54,7 @@ public class TimestampRespFormatter extends BaseRespFormatter {
     }
 
     @Override
-    public String decode(byte[] input) {
+    public String decode(byte[] input) throws IOException {
         String str = new String(input, StandardCharsets.UTF_8);
         final Matcher matcher = PATTERN_TIMESTAMP.matcher(str);
         if (matcher.matches()) {
@@ -61,7 +62,7 @@ public class TimestampRespFormatter extends BaseRespFormatter {
             LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(mills), ZoneId.systemDefault());
             return JsonUtil.getFormatter().format(dateTime);
         }
-        throw new UnsupportedOperationException("not timestamp");
+        throw new IOException("not timestamp");
     }
 
 }
