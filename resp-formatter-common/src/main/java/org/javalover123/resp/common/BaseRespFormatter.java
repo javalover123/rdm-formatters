@@ -25,7 +25,7 @@
  *
  */
 
-package org.javalover123.resp.common.util;
+package org.javalover123.resp.common;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -43,6 +43,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import org.javalover123.resp.common.dto.Info;
+import org.javalover123.resp.common.util.JsonUtil;
 
 /**
  * redis desktop manager base formatter

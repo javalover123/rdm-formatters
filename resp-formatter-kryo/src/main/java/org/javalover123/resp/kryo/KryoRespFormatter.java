@@ -30,7 +30,7 @@ package org.javalover123.resp.kryo;
 import java.io.IOException;
 import java.util.Arrays;
 import org.javalover123.resp.common.dto.Info;
-import org.javalover123.resp.common.util.BaseRespFormatter;
+import org.javalover123.resp.common.BaseRespFormatter;
 import org.javalover123.resp.common.util.JsonUtil;
 
 /**
