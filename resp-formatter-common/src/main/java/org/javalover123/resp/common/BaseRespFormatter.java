@@ -141,7 +141,7 @@ public abstract class BaseRespFormatter {
 
     protected void outputToStdout(Object object) {
         String json = jsonify(object);
-        // log(Level.FINE, "outputToStdout|" + json);
+        log(Level.FINE, "outputToStdout|" + json);
         STDOUT.print(json);
     }
 

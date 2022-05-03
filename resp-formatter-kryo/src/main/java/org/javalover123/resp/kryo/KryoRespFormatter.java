@@ -29,6 +29,7 @@ package org.javalover123.resp.kryo;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.logging.Level;
 import org.javalover123.resp.common.dto.Info;
 import org.javalover123.resp.common.BaseRespFormatter;
 import org.javalover123.resp.common.util.JsonUtil;
@@ -44,7 +45,7 @@ public class KryoRespFormatter extends BaseRespFormatter {
     private KryoSerializer kryoSerializer;
 
     public KryoRespFormatter(Class clazz) {
-        log = buildLog();
+        // log = buildLog();
         this.kryoSerializer = new KryoSerializer(clazz);
     }
 
@@ -61,9 +62,9 @@ public class KryoRespFormatter extends BaseRespFormatter {
     @Override
     public String decode(byte[] input) throws IOException {
         try {
-            // log.fine("kryo decode input|" + Arrays.toString(input));
+            log(Level.FINE, "kryo decode input|" + Arrays.toString(input));
             final Object result = kryoSerializer.deserialize(input);
-            // log.fine("kryo decode result|" + result);
+            log(Level.FINE, "kryo decode result|" + result);
             return JsonUtil.toJson(result);
         } catch (Exception e) {
             // e.printStackTrace();
