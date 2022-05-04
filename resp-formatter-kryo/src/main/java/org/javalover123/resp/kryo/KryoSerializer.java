@@ -34,7 +34,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * kryo 序列化
+ * kryo Serializer
  *
  * @author javalover123
  * @date 2021/6/28
@@ -62,7 +62,7 @@ public class KryoSerializer<T> {
         if (null == t) {
             return EMPTY_BYTE_ARRAY;
         }
-        // -1 代表无限制，实际中依业务修改
+        // -1 means no limit
         Output output = new Output(BUFFER_SIZE, -1);
         Kryo kryo = KRYOS.get();
         kryo.writeObject(output, t);

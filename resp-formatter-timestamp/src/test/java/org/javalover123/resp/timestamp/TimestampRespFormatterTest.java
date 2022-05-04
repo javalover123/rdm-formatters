@@ -32,12 +32,18 @@ import java.nio.charset.StandardCharsets;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * timestamp formatter test
+ *
+ * @author javalover123
+ * @date 2022/4/29
+ */
 public class TimestampRespFormatterTest {
 
     private TimestampRespFormatter timestampRespFormatter = new TimestampRespFormatter();
 
     @Test
-    public void format() throws IOException {
+    public void decode() throws IOException {
         String expected_value = "2022-04-27 12:12:59.850000000";
         String value = timestampRespFormatter.decode("1651032779850".getBytes(StandardCharsets.UTF_8));
         Assert.assertEquals(expected_value, value);

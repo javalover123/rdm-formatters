@@ -30,7 +30,7 @@ package org.javalover123.resp;
 import org.javalover123.resp.json.JsonRespFormatter;
 
 /**
- * 入口
+ * main
  *
  * @author javalover123
  * @date 2022/4/27

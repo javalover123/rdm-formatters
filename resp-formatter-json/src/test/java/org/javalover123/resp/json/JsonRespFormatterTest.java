@@ -32,12 +32,18 @@ import java.nio.charset.StandardCharsets;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * json formatter test
+ *
+ * @author javalover123
+ * @date 2022/4/29
+ */
 public class JsonRespFormatterTest {
 
     private JsonRespFormatter respFormatter = new JsonRespFormatter();
 
     @Test
-    public void format() throws IOException {
+    public void decode() throws IOException {
         String expected_value = "{\"id\":\"633381\",\"updateTime\":\"2022-04-29 08:00:27.0\"}";
         String json = "{\"id\":\"633381\",\"updateTime\":\"1651190427000\"}";
         String value = respFormatter.decode(json.getBytes(StandardCharsets.UTF_8));

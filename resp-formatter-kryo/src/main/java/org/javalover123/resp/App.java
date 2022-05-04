@@ -32,7 +32,7 @@ import com.esotericsoftware.minlog.Log.Logger;
 import org.javalover123.resp.kryo.KryoRespFormatter;
 
 /**
- * 入口
+ * main
  *
  * @author javalover123
  * @date 2022/4/27

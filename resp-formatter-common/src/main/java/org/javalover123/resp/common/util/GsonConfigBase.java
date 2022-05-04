@@ -41,7 +41,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
- * gson全局配置java8 LocalDateTime的序列化 全局配置时间返回格式
+ * gson global config, java8 LocalDateTime serializer
  *
  * @author javalover123
  * @date 2021/8/30
@@ -49,7 +49,7 @@ import java.util.Objects;
 public class GsonConfigBase {
 
     /**
-     * 默认时区
+     * Default zone
      */
     public static final ZoneId ZONE_ID = ZoneId.systemDefault();
 
@@ -63,7 +63,7 @@ public class GsonConfigBase {
     }
 
     /**
-     * description:适配自定义序列化和反序列化策略
+     * description: custom gson serializer
      */
     public static void customGsonBuilderCustomizer(GsonBuilder builder, String dateFormat) {
         builder.registerTypeAdapter(BigDecimal.class, new BigDecimalSerializer());
@@ -78,7 +78,7 @@ public class GsonConfigBase {
     }
 
     /**
-     * description:序列化 BigDecimal序列化为字符串
+     * description: BigDecimal to string
      */
     public static class BigDecimalSerializer implements JsonSerializer<BigDecimal> {
 
@@ -92,7 +92,7 @@ public class GsonConfigBase {
     }
 
     /**
-     * description:序列化 Double序列化为字符串
+     * description: Double to string
      */
     public static class DoubleSerializer implements JsonSerializer<Double> {
 
@@ -106,7 +106,7 @@ public class GsonConfigBase {
     }
 
     /**
-     * description:序列化 LocalDate序列化为毫秒级时间戳
+     * description: LocalDate serializer
      */
     public static class LocalDateSerializer implements JsonSerializer<LocalDate> {
 
@@ -120,7 +120,7 @@ public class GsonConfigBase {
     }
 
     /**
-     * description:反序列化 毫秒级时间戳序列化为LocalDate
+     * description: LocalDate deserializer
      */
     public static class LocalDateDeserializer implements JsonDeserializer<LocalDate> {
 
@@ -141,7 +141,7 @@ public class GsonConfigBase {
 
 
     /**
-     * description:序列化 LocalTime序列化成字符串
+     * description: LocalTime serializer
      */
     public static class LocalTimeSerializer implements JsonSerializer<LocalTime> {
 
@@ -156,7 +156,7 @@ public class GsonConfigBase {
     }
 
     /**
-     * description:反序列化 HH:mm:ss序列化为LocalTime
+     * description: LocalTime deserializer
      */
     public static class LocalTimeDeserializer implements JsonDeserializer<LocalTime> {
 
@@ -172,7 +172,7 @@ public class GsonConfigBase {
 
 
     /**
-     * description:序列化 LocalDateTime序列化为毫秒级时间戳
+     * description: LocalDateTime serializer
      */
     public static class LocalDateTimeSerializer implements JsonSerializer<LocalDateTime> {
 
@@ -206,7 +206,7 @@ public class GsonConfigBase {
     }
 
     /**
-     * description:反序列化 毫秒级时间戳序列化为LocalDateTime
+     * description: LocalDateTime deserializer
      */
     public static class LocalDateTimeDeserializer implements JsonDeserializer<LocalDateTime> {
 
