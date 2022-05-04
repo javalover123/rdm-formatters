@@ -17,6 +17,7 @@
 
     <modules>
         <module>resp-formatter-common</module>
+        <module>resp-formatter-json</module>
         <module>resp-formatter-kryo</module>
         <module>resp-formatter-timestamp</module>
     </modules>
