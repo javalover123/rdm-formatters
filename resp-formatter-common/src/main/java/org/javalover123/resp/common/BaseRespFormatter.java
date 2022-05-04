@@ -126,7 +126,7 @@ public abstract class BaseRespFormatter {
         outputToStdout(Collections.singletonMap("error", "not impleted"));
     }
 
-    public String error(String msg) {
+    protected String error(String msg) {
         outputToStdout(Collections.singletonMap("error", msg));
         return null;
     }
@@ -137,12 +137,14 @@ public abstract class BaseRespFormatter {
      * @param input byte array
      * @return
      */
-    public abstract String decode(byte[] input) throws IOException;
+    protected abstract String decode(byte[] input) throws IOException;
 
-    protected void outputToStdout(Object object) {
+    protected String outputToStdout(Object object) {
         String json = jsonify(object);
+        json = string2Unicode(json);
         log(Level.FINE, "outputToStdout|" + json);
         STDOUT.print(json);
+        return json;
     }
 
     protected byte[] inputFromStdin() throws IOException {
@@ -182,6 +184,36 @@ public abstract class BaseRespFormatter {
         if (log != null) {
             log.log(level, msg);
         }
+    }
+
+    /**
+     * convert string to unicode
+     *
+     * @param string
+     * @return
+     */
+    protected String string2Unicode(String string) {
+        if (string == null || string.isEmpty()) {
+            return null;
+        }
+
+        char[] bytes = string.toCharArray();
+        StringBuffer unicode = new StringBuffer();
+        for (int i = 0; i < bytes.length; i++) {
+            char c = bytes[i];
+            if (c >= 0 && c <= 127) {
+                unicode.append(c);
+                continue;
+            }
+            String hexString = Integer.toHexString(bytes[i]);
+            unicode.append("\\u");
+
+            if (hexString.length() < 4) {
+                unicode.append("0000".substring(hexString.length(), 4));
+            }
+            unicode.append(hexString);
+        }
+        return unicode.toString();
     }
 
 }
