@@ -45,7 +45,7 @@ public class JsonRespFormatterTest {
     @Test
     public void decode() throws IOException {
         String expected_value = "{\"id\":\"633381\",\"updateTime\":\"2022-04-29 08:00:27.0\"}";
-        String json = "{\"id\":\"633381\",\"updateTime\":\"1651190427000\"}";
+        String json = "{\"id\":\"633381\",\"updateTime\":1651190427000}";
         String value = respFormatter.decode(json.getBytes(StandardCharsets.UTF_8));
         Assert.assertEquals(expected_value, value);
     }

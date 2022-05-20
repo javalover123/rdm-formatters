@@ -56,6 +56,7 @@ public class GsonConfigBase {
     public static Gson gson(String dateFormat, boolean pretty) {
         GsonBuilder builder = new GsonBuilder();
         customGsonBuilderCustomizer(builder, dateFormat);
+        builder.setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE);
         if (pretty) {
             builder.setPrettyPrinting();
         }
