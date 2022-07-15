@@ -33,6 +33,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -51,7 +52,7 @@ import org.javalover123.resp.common.util.JsonUtil;
  */
 public class JsonRespFormatter extends BaseRespFormatter {
 
-    private static final Pattern PATTERN_TIMESTAMP = Pattern.compile("^\\d{13}$");
+    private static final Pattern PATTERN_TIMESTAMP = Pattern.compile("^[1-9]\\d{12,18}$");
 
     {
         // log = buildLog();
@@ -68,28 +69,43 @@ public class JsonRespFormatter extends BaseRespFormatter {
         log(Level.FINE, "decode input|" + str);
         if (str.startsWith("{")) {
             Map<String, Object> map = JsonUtil.toObject(str, Map.class);
-            for (Entry<String, Object> entry : map.entrySet()) {
-                final String value = Objects.toString(entry.getValue(), "");
-                entry.setValue(handleValue(value));
-            }
+            map = (Map<String, Object>) handleValue(map);
             return JsonUtil.toJson(map);
         } else if (str.startsWith("[")) {
             List<Object> list = JsonUtil.toObject(str, List.class);
-            for (int i = 0; i < list.size(); i++) {
-                Object obj = list.get(i);
-                final String value = Objects.toString(obj, "");
-                list.set(i, handleValue(value));
-            }
+            list = (List<Object>) handleValue(list);
             return JsonUtil.toJson(list);
         }
         throw new IOException("not timestamp");
     }
 
-    Object handleValue(String value) {
-        String str = value.replace("\"", "");
+    Object handleValue(Object value) {
+        if (value == null) {
+            return null;
+        } else if (value instanceof Map) {
+            Map<String, Object> map = (Map<String, Object>) value;
+            for (Entry<String, Object> entry : map.entrySet()) {
+                final Object temp = entry.getValue();
+                entry.setValue(handleValue(temp));
+            }
+        } else if (value instanceof List) {
+            List<Object> list = (List<Object>) value;
+            for (ListIterator<Object> iterator = list.listIterator(); iterator.hasNext(); ) {
+                Object temp = iterator.next();
+                iterator.set(handleValue(temp));
+            }
+        } else {
+            return handleTimestamp(value);
+        }
+        return value;
+    }
+
+    Object handleTimestamp(Object value) {
+        String str = Objects.toString(value, "").replace("\"", "");
         final Matcher matcher = PATTERN_TIMESTAMP.matcher(str);
-        if (matcher.matches()) {
-            final long mills = Long.parseLong(str);
+        final int length = str.length();
+        if (matcher.matches() && (length == 13 || length == 19)) {
+            final long mills = Long.parseLong(str.substring(0, 13));
             LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(mills), ZoneId.systemDefault());
             return dateTime;
         }
