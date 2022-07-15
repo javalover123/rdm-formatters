@@ -46,7 +46,7 @@ import org.javalover123.resp.common.util.JsonUtil;
  */
 public class TimestampRespFormatter extends BaseRespFormatter {
 
-    private static final Pattern PATTERN_TIMESTAMP = Pattern.compile("^\\d{13}$");
+    private static final Pattern PATTERN_TIMESTAMP = Pattern.compile("^[1-9]\\d{12,18}$");
 
     @Override
     public Info info() {
@@ -58,8 +58,9 @@ public class TimestampRespFormatter extends BaseRespFormatter {
         String str = new String(input, StandardCharsets.UTF_8);
         str = str.replace("\"", "");
         final Matcher matcher = PATTERN_TIMESTAMP.matcher(str);
-        if (matcher.matches()) {
-            final long mills = Long.parseLong(str);
+        final int length = str.length();
+        if (matcher.matches() && (length == 13 || length == 19)) {
+            final long mills = Long.parseLong(str.substring(0, 13));
             LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(mills), ZoneId.systemDefault());
             return JsonUtil.getFormatter().format(dateTime);
         }
